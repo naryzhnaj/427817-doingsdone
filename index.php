@@ -2,12 +2,20 @@
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 $projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
-$tasks = [["Собеседование в IT компании",	"01.12.2018",	"Работа", "Нет"],
-          ["Выполнить тестовое задание", "25.12.2018", "Работа", "Нет"],
-          ["Сделать задание первого раздела", "21.12.2018", "Учеба", "Да"],
-          ["Встреча с другом", "22.12.2018", "Входящие", "Нет"],
-          ["Купить корм для кота", "Нет", "Домашние дела", "Нет"],
-          ["Заказать пиццу", "Нет", "Домашние дела", "Нет"]];
+$tasks = [['name' => "Собеседование в IT компании", 'date' => "01.12.2018",  'category' => "Работа", 'done' => false],
+          ['name' => "Выполнить тестовое задание", 'date' => "25.12.2018",  'category' => "Работа", 'done' => false],
+          ['name' => "Сделать задание первого раздела", 'date' => "21.12.2018",  'category' =>"Учеба", 'done' => true],
+          ['name' => "Встреча с другом", 'date' => "22.12.2018",  'category' => "Входящие", 'done' => false],
+          ['name' => "Купить корм для кота", 'date' => "Нет", 'category' => "Домашние дела", 'done' => false],
+          ['name' => "Заказать пиццу", 'date' => "Нет", 'category' => "Домашние дела", 'done' => false]];
+
+function group_tasks($project_name, $task_list) {
+    $sum = 0;
+    foreach( $task_list as $task ) {    
+        if ( $task['category'] == $project_name ) {$sum++;}
+    }
+    return $sum;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -95,17 +103,17 @@ $tasks = [["Собеседование в IT компании",	"01.12.2018",	"�
                 <table class="tasks">
                     <?php if ($show_complete_tasks): ?>
                         <?php foreach ($tasks as $task): ?>
-                            <tr class="tasks__item task" <?php if ($task[3] === 'Да'): ?>"task--completed"<?php endif; ?>>
+                            <tr class="tasks__item task <?php if ( $task['done'] ):?> task--completed <?php endif; ?>">
                               <td class="task__select">
                                 <label class="checkbox task__checkbox">
-                                  <input class="checkbox__input visually-hidden" type="checkbox"  <?php if ($task[3] === 'Да'): ?>checked<?php endif; ?>>
-                                  <span class="checkbox__text"><?=$task[0];?></span>
+                                  <input class="checkbox__input visually-hidden" type="checkbox"  <?php if ( $task['done'] ): ?>checked<?php endif; ?>>
+                                  <span class="checkbox__text"><?=$task['name'];?></span>
                                 </label>
                               </td>
-                              <td class="task__date"><?=$task[1];?></td>
+                              <td class="task__date"><?=$task['date'];?></td>
 
                               <td class="task__controls">
-                                  <?=$task[2];?>
+                                  <?=$task['category'];?>
                               </td>
                             </tr>
                         <?php endforeach; ?>
