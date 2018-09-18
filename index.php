@@ -61,10 +61,10 @@ function group_tasks($project_name, $task_list) {
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                        <?php foreach ($projects as $project_name): ?>
+                        <?php foreach ($projects as $project): ?>
                             <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link" href="#"><?=$project_name;?></a>
-                                <span class="main-navigation__list-item-count">0</span>
+                                <a class="main-navigation__list-item-link" href="#"><?= $project; ?></a>
+                                <span class="main-navigation__list-item-count"><?= group_tasks($project, $tasks); ?></span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
