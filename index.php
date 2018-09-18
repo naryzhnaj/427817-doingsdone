@@ -8,17 +8,6 @@ $tasks = [['name' => "Собеседование в IT компании", 'date'
           ['name' => "Встреча с другом", 'date' => "22.12.2018",  'category' => "Входящие", 'done' => false],
           ['name' => "Купить корм для кота", 'date' => "Нет", 'category' => "Домашние дела", 'done' => false],
           ['name' => "Заказать пиццу", 'date' => "Нет", 'category' => "Домашние дела", 'done' => false]];
-<<<<<<< HEAD
-=======
-
-function group_tasks($project_name, $task_list) {
-    $sum = 0;
-    foreach( $task_list as $task ) {    
-        if ( $task['category'] == $project_name ) {$sum++;}
-    }
-    return $sum;
-}
->>>>>>> e37673148d79222ef2263b5bb3e8b249e9344f1c
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -67,11 +56,7 @@ function group_tasks($project_name, $task_list) {
                         <?php foreach ($projects as $project): ?>
                             <li class="main-navigation__list-item">
                                 <a class="main-navigation__list-item-link" href="#"><?= $project; ?></a>
-<<<<<<< HEAD
                                 <span class="main-navigation__list-item-count">0</span>
-=======
-                                <span class="main-navigation__list-item-count"><?= group_tasks($project, $tasks); ?></span>
->>>>>>> e37673148d79222ef2263b5bb3e8b249e9344f1c
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -108,13 +93,8 @@ function group_tasks($project_name, $task_list) {
                 </div>
 
                 <table class="tasks">
-<<<<<<< HEAD
                     <?php foreach ($tasks as $task): ?>
                         <?php if ( $show_complete_tasks || !$task['done'] ): ?> 
-=======
-                    <?php if ($show_complete_tasks): ?>
-                        <?php foreach ($tasks as $task): ?>
->>>>>>> e37673148d79222ef2263b5bb3e8b249e9344f1c
                             <tr class="tasks__item task <?php if ( $task['done'] ):?> task--completed <?php endif; ?>">
                               <td class="task__select">
                                 <label class="checkbox task__checkbox">
@@ -123,7 +103,6 @@ function group_tasks($project_name, $task_list) {
                                 </label>
                               </td>
                               <td class="task__date"><?=$task['date'];?></td>
-
                               <td class="task__controls">
                                   <?=$task['category'];?>
                               </td>
