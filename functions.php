@@ -23,4 +23,14 @@
 
     return $result;
     }
+
+    function set_task_class($current_task) {
+        if ( $current_task['done'] ) {
+            return 'task--completed';
+        }
+        if ( $current_task['date'] != 'Нет' && floor( (strtotime($current_task['date'] ) - time() ) / 3600) <= 24 ) {
+            return 'task--important';
+        }
+        return '';
+    }
 ?>
