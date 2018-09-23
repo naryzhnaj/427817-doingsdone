@@ -26,16 +26,16 @@
 <table class="tasks">
     <?php foreach ($tasks as $task): ?>
         <?php if ( $show_complete_tasks || !$task['done'] ): ?> 
-            <tr class="tasks__item task <?php if ( $task['done'] ):?> task--completed <?php endif; ?>">
+            <tr class="tasks__item task <?= set_task_class($task); ?>">
                 <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden" type="checkbox"  <?php if ( $task['done'] ): ?>checked<?php endif; ?>>
-                    <span class="checkbox__text"><?=$task['name'];?></span>
+                    <span class="checkbox__text"><?= htmlspecialchars($task['name']); ?></span>
                 </label>
                 </td>
-                <td class="task__date"><?=$task['date'];?></td>
+                <td class="task__date"><?= htmlspecialchars($task['date']); ?></td>
                 <td class="task__controls">
-                    <?=$task['category'];?>
+                    <?= htmlspecialchars($task['category']); ?>
                 </td>
             </tr>  
         <?php endif; ?>
