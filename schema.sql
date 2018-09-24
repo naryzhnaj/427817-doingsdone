@@ -25,8 +25,9 @@ term DATETIME,
 task_file BINARY,
 task_status ENUM('0','1') DEFAULT '0',
 author INT,
-project INT,
-FOREIGN KEY (author) REFERENCES users(id)
+project CHAR,
+FOREIGN KEY (author) REFERENCES users(id),
+FOREIGN KEY (project) REFERENCES projects(title)
 );
 
 CREATE UNIQUE INDEX email ON users(email);
