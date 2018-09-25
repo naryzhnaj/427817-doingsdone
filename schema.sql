@@ -11,23 +11,24 @@ contacts CHAR(128)
 );
 
 CREATE TABLE projects (
-title CHAR(128) PRIMARY KEY NOT NULL,
-author INT,
-FOREIGN KEY (author) REFERENCES users(id)
+id INT AUTO_INCREMENT PRIMARY KEY,
+title CHAR(128) NOT NULL,
+author_id INT,
+FOREIGN KEY (author_id) REFERENCES users(id)
 );
 
 CREATE TABLE tasks (
 id INT AUTO_INCREMENT PRIMARY KEY,
 realization DATETIME,
-creation DATETIME,
+creation DATETIME DEFAULT NOW(),
 title CHAR(128) NOT NULL,
 term DATETIME,
 task_file BINARY,
 task_status ENUM('0','1') DEFAULT '0',
-author INT,
-project CHAR,
-FOREIGN KEY (author) REFERENCES users(id),
-FOREIGN KEY (project) REFERENCES projects(title)
+author_id INT,
+project_id INT,
+FOREIGN KEY (project_id) REFERENCES projects(id),
+FOREIGN KEY (author_id) REFERENCES users(id)
 );
 
 CREATE UNIQUE INDEX email ON users(email);
