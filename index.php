@@ -1,16 +1,51 @@
 <?php
     $show_complete_tasks = rand(0, 1);
-    $projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
-    $tasks = [['name' => "Собеседование в IT компании", 'date' => "23.09.2018",  'category' => "Работа", 'done' => false],
-            ['name' => "Выполнить тестовое задание", 'date' => "21.09.2018",  'category' => "Работа", 'done' => false],
-            ['name' => "Сделать задание первого раздела", 'date' => "21.12.2018",  'category' =>"Учеба", 'done' => true],
-            ['name' => "Встреча с другом", 'date' => "22.09.2018",  'category' => "Входящие", 'done' => false],
-            ['name' => "Купить корм для кота", 'date' => "Нет", 'category' => "Домашние дела", 'done' => false],
-            ['name' => "Заказать пиццу", 'date' => "Нет", 'category' => "Домашние дела", 'done' => false]];
-    $user_name = 'you';
+    
+    // новый пользователь для примера
+    $user_id = 3;
+	$link = mysqli_connect('localhost', 'root', '', 'doingsdone');
+    mysqli_set_charset($link, 'utf8');
 
+    if (!$link) {
+        $error = mysqli_connect_error();
+        print("Не удалось подключиться к MySQL");
+    }
+    else {
+        $sql = 'SELECT name FROM users WHERE id = ' . $user_id;
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $user = mysqli_fetch_assoc($result);
+        }
+        else {
+            $error = mysqli_error($link);
+            print("Не удалось получить данные");
+        }
+
+        $sql = 'SELECT id, title FROM projects WHERE author_id = ' . $user_id;
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        }
+        else {
+            $error = mysqli_error($link);
+            print("Не удалось получить данные");
+        }
+        
+        $sql = 'SELECT tasks.title, project_id AS category, term AS date, task_status AS done, projects.title AS project_name
+                        FROM tasks INNER JOIN projects ON projects.id = tasks.project_id
+                        WHERE tasks.author_id = ' . $user_id;
+
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        }
+        else {
+            $error = mysqli_error($link);
+            print("Не удалось получить данные");
+        }
+    }
     require_once('functions.php');
-    $page_content = include_template('index.php', ['show_complete_tasks' => $show_complete_tasks,'tasks' => $tasks, 'projects' => $projects]);
-    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'tasks' => $tasks, 'user_name' => $user_name,'title' => 'Дела в порядке']);
+    $page_content = include_template('index.php', ['show_complete_tasks' => $show_complete_tasks,'tasks' => $tasks]);
+    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'tasks' => $tasks, 'user_name' => $user['name'],'title' => 'Дела в порядке']);
     print($layout_content);
 ?>

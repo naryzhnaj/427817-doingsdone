@@ -1,8 +1,8 @@
 <?php
-    function group_tasks($project_name, $task_list) {
+    function group_tasks($project_number, $task_list) {
         $sum = 0;
         foreach( $task_list as $task ) {    
-            if ( $task['category'] == $project_name ) {$sum++;}
+            if ( $task['category'] === $project_number ) {$sum++;}
         }
         return $sum;
     }
@@ -29,7 +29,7 @@
         if ( $current_task['done'] ) {
             $task_status = 'task--completed';
         }
-        elseif ( $current_task['date'] != 'Нет' && floor( (strtotime($current_task['date'] ) - time() ) / 3600) <= 24 ) {
+        elseif ( $current_task['date'] && floor( (strtotime($current_task['date'] ) - time() ) / 3600) <= 24 ) {
             $task_status = 'task--important';
         }
         return $task_status;
