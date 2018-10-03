@@ -1,51 +1,26 @@
 <?php
     $show_complete_tasks = rand(0, 1);
     
-    // новый пользователь для примера
-    $user_id = 3;
 	$link = mysqli_connect('localhost', 'root', '', 'doingsdone');
     mysqli_set_charset($link, 'utf8');
-
+    require_once('functions.php');
     if (!$link) {
         $error = mysqli_connect_error();
-        print("Не удалось подключиться к MySQL");
+        $layout_content = include_template('error.php', ['error' => $error]);
     }
     else {
-        $sql = 'SELECT name FROM users WHERE id = ' . $user_id;
-        $result = mysqli_query($link, $sql);
-        if ($result) {
-            $user = mysqli_fetch_assoc($result);
+        $user = 3;
+        try {
+            $tasks = get_tasks($user, $link);
+            $projects = get_projects($user, $link);
+            $user_name = get_name($user, $link);
         }
-        else {
-            $error = mysqli_error($link);
-            print("Не удалось получить данные");
-        }
-
-        $sql = 'SELECT id, title FROM projects WHERE author_id = ' . $user_id;
-        $result = mysqli_query($link, $sql);
-        if ($result) {
-            $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        }
-        else {
-            $error = mysqli_error($link);
-            print("Не удалось получить данные");
+        catch (Exception $ex) {
+            echo $ex->getMessage();
         }
         
-        $sql = 'SELECT tasks.title, project_id AS category, term AS date, task_status AS done, projects.title AS project_name
-                        FROM tasks INNER JOIN projects ON projects.id = tasks.project_id
-                        WHERE tasks.author_id = ' . $user_id;
-
-        $result = mysqli_query($link, $sql);
-        if ($result) {
-            $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        }
-        else {
-            $error = mysqli_error($link);
-            print("Не удалось получить данные");
-        }
+        $page_content = include_template('index.php', ['show_complete_tasks' => $show_complete_tasks,'tasks' => $tasks]);
+        $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'user_name' => $user_name['name'],'title' => 'Дела в порядке']);
     }
-    require_once('functions.php');
-    $page_content = include_template('index.php', ['show_complete_tasks' => $show_complete_tasks,'tasks' => $tasks]);
-    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'tasks' => $tasks, 'user_name' => $user['name'],'title' => 'Дела в порядке']);
     print($layout_content);
 ?>
