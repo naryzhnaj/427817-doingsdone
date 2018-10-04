@@ -1,16 +1,26 @@
 <?php
     $show_complete_tasks = rand(0, 1);
-    $projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
-    $tasks = [['name' => "Собеседование в IT компании", 'date' => "23.09.2018",  'category' => "Работа", 'done' => false],
-            ['name' => "Выполнить тестовое задание", 'date' => "21.09.2018",  'category' => "Работа", 'done' => false],
-            ['name' => "Сделать задание первого раздела", 'date' => "21.12.2018",  'category' =>"Учеба", 'done' => true],
-            ['name' => "Встреча с другом", 'date' => "22.09.2018",  'category' => "Входящие", 'done' => false],
-            ['name' => "Купить корм для кота", 'date' => "Нет", 'category' => "Домашние дела", 'done' => false],
-            ['name' => "Заказать пиццу", 'date' => "Нет", 'category' => "Домашние дела", 'done' => false]];
-    $user_name = 'you';
-
+    
+	$link = mysqli_connect('localhost', 'root', '', 'doingsdone');
+    mysqli_set_charset($link, 'utf8');
     require_once('functions.php');
-    $page_content = include_template('index.php', ['show_complete_tasks' => $show_complete_tasks,'tasks' => $tasks, 'projects' => $projects]);
-    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'tasks' => $tasks, 'user_name' => $user_name,'title' => 'Дела в порядке']);
+    if (!$link) {
+        $error = mysqli_connect_error();
+        $layout_content = include_template('error.php', ['error' => $error]);
+    }
+    else {
+        $user = 3;
+        try {
+            $tasks = get_tasks($user, $link);
+            $projects = get_projects($user, $link);
+            $user_name = get_name($user, $link);
+        }
+        catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+        
+        $page_content = include_template('index.php', ['show_complete_tasks' => $show_complete_tasks,'tasks' => $tasks]);
+        $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'user_name' => $user_name['name'],'title' => 'Дела в порядке']);
+    }
     print($layout_content);
 ?>

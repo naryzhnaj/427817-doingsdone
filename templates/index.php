@@ -15,7 +15,6 @@
     </nav>
 
     <label class="checkbox">
-        <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
         <input class="checkbox__input visually-hidden show_completed"
                 <?php if ($show_complete_tasks): ?>checked<?php endif; ?>
                 type="checkbox">
@@ -30,12 +29,12 @@
                 <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden" type="checkbox"  <?php if ( $task['done'] ): ?>checked<?php endif; ?>>
-                    <span class="checkbox__text"><?= htmlspecialchars($task['name']); ?></span>
+                    <span class="checkbox__text"><?= htmlspecialchars($task['title']); ?></span>
                 </label>
                 </td>
                 <td class="task__date"><?= htmlspecialchars($task['date']); ?></td>
                 <td class="task__controls">
-                    <?= htmlspecialchars($task['category']); ?>
+                    <?= htmlspecialchars( $task['project_name'] ); ?>
                 </td>
             </tr>  
         <?php endif; ?>
