@@ -9,16 +9,21 @@
         $layout_content = include_template('error.php', ['error' => $error]);
     }
     else {
-        $user = 3;
+        $user = 2;
         try {
-            $tasks = get_tasks($user, $link);
-            $projects = get_projects($user, $link);
             $user_name = get_name($user, $link);
+            $projects = get_projects($user, $link);
+            
+            $id = ( isset($_GET['id']) ) ? intval($_GET['id']) : 0;
+            $tasks = get_tasks($user, $link, $id);
         }
         catch (Exception $ex) {
             echo $ex->getMessage();
         }
         
+        if (empty($tasks)) {
+            http_response_code(404);
+        }
         $page_content = include_template('index.php', ['show_complete_tasks' => $show_complete_tasks,'tasks' => $tasks]);
         $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'user_name' => $user_name['name'],'title' => 'Дела в порядке']);
     }
