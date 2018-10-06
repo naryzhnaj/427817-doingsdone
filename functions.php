@@ -26,10 +26,14 @@
         return $projects;
     }
 
-    function get_tasks($user_id, $conn) {
+    function get_tasks($user_id, $conn, $project) {
         $sql = 'SELECT tasks.title, project_id AS category, term AS date, task_status AS done, projects.title AS project_name
                 FROM tasks INNER JOIN projects ON projects.id = tasks.project_id
                 WHERE tasks.author_id = ' . $user_id;
+        
+        if ($project) {
+          $sql .= ' AND tasks.project_id = ' . $project;
+        }
 
         $result = mysqli_query($conn, $sql);
         if ($result) {
