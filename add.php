@@ -30,7 +30,9 @@
             
             if (isset($_POST['date'])) {
                 $task['date'] = date('Y-m-d', strtotime( htmlspecialchars($_POST['date'])));
-                if (!$task['date']) $errors['date'] = 'извините, некорректная дата';
+                if (!$task['date']) {
+					$errors['date'] = 'извините, некорректная дата';
+				}
             } else {
                 $task['date'] = NULL;        
             }         
@@ -44,7 +46,7 @@
 
             $page_content = include_template('add_task.php', ['projects' => $projects, 'errors' => $errors]);
             
-            if (!count($errors)) {          
+            if (!$errors) {          
                 $stmt = mysqli_prepare($link, $sql);
                 mysqli_stmt_bind_param($stmt, 'sssii', $task['title'], $task['date'], $task['file'], $task['project_id'], $user);
                 $res = mysqli_stmt_execute($stmt);   
