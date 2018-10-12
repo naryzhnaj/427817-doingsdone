@@ -45,6 +45,29 @@
         return $tasks;
     }
 
+    function insert_task($conn, $task, $user_id) {
+        $sql = 'INSERT INTO tasks (title, term, task_file, project_id, author_id) VALUES (?, ?, ?, ?, ?)';
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, 'sssii', $task['title'], $task['date'], $task['file'], $task['project_id'], $user_id);
+        $res = mysqli_stmt_execute($stmt);
+        return $res;
+    }
+
+    function insert_user($conn, $user) {
+        $sql = 'INSERT INTO users (email, name, password, registration) VALUES (?, ?, ?, NOW())';
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, 'sss', $user['email'], $user['name'], $user['password']);
+        $res = mysqli_stmt_execute($stmt);   
+        return $res;
+    }
+   
+    function check_email($conn, $email) {    
+        $email = mysqli_real_escape_string($conn, $email);
+        $sql = "SELECT id FROM users WHERE email = '$email'";
+        $res = mysqli_query($conn, $sql);
+        return (mysqli_num_rows($res) > 0);
+    }
+
     function include_template($name, $data) {
         $name = 'templates/' . $name;
         $result = '';
