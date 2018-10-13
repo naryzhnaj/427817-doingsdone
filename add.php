@@ -9,10 +9,9 @@
         exit();
     }
 
-    $user = 2;
     try {
-        $user_name = get_name($user, $link);
-        $projects = get_projects($user, $link);
+        $user_id = $_SESSION['user']['id'];
+        $projects = get_projects($user_id, $link);
     }
     catch (Exception $ex) {
         echo $ex->getMessage();
@@ -57,6 +56,6 @@
         }
     }
     $page_content = include_template('add_task.php', ['projects' => $projects, 'errors' => $errors]);
-    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'user_name' => $user_name['name'],'title' => 'Добавить задачу']);
+    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'user_name' => $_SESSION['user']['name'],'title' => 'Добавить задачу']);
     print($layout_content);
 ?>

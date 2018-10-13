@@ -1,14 +1,9 @@
 <?php
-    function get_name($user_id, $conn) {
-        $sql = 'SELECT name FROM users WHERE id = ' . $user_id;
-        $result = mysqli_query($conn, $sql);
-        if ($result) {
-            $user = mysqli_fetch_assoc($result);
-        }
-        else {
-            throw new Exception("Не удалось получить данные");
-        }
-        return $user;
+    function get_user($email, $conn) {
+        $email = mysqli_real_escape_string($conn, $email);
+        $sql = "SELECT * FROM users WHERE email = '$email'";
+        $res = mysqli_query($conn, $sql);
+        return $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
     }
 
     function get_projects($user_id, $conn) {
