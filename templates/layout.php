@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <title> <?=$title;?> </title>
@@ -8,38 +7,36 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
-
 <body>
     <h1 class="visually-hidden">Дела в порядке</h1>
 
     <div class="page-wrapper">
         <div class="container container--with-sidebar">
             <header class="main-header">
-                <?php if (isset($_SESSION['user'])) : ?>      
-                    <a href="/">
-                        <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
-                    </a>
-                    
-                        <div class="main-header__side">
-                            <a class="main-header__side-item button button--plus open-modal" href="add.php">Добавить задачу</a>
-
-                            <div class="main-header__side-item user-menu">
-                                <div class="user-menu__image">
-                                    <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
-                                </div>
-
-                                <div class="user-menu__data">
-                                    <p><?= $_SESSION['user']['name']; ?></p>
-
-                                    <a href="logout.php">Выйти</a>
-                                </div>
+                <a href="/">
+                    <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
+                </a>
+                <div class="main-header__side">
+                    <?php if (isset($_SESSION['user'])) : ?>          
+                        <a class="main-header__side-item button button--plus open-modal" href="add.php">Добавить задачу</a>
+                        <div class="main-header__side-item user-menu">
+                            <div class="user-menu__image">
+                                <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
+                            </div>
+                            <div class="user-menu__data">
+                                <p><?= $_SESSION['user']['name']; ?></p>
+                                <a href="logout.php">Выйти</a>
                             </div>
                         </div>
-                <?php endif; ?>
+                    
+                    <?php else: ?>
+                        <a class="main-header__side-item button button--transparent" href="auth.php">Войти</a>
+                    <?php endif; ?>
+                </div>    
             </header>        
             <div class="content">
-                <?php if (isset($_SESSION['user'])) : ?>
-                    <section class="content__side">
+                <section class="content__side">
+                    <?php if (isset($_SESSION['user'])) : ?>    
                         <h2 class="content__side-heading">Проекты</h2>
                         <nav class="main-navigation">
                             <ul class="main-navigation__list">
@@ -51,11 +48,16 @@
                                 <?php endforeach; ?>
                             </ul>
                         </nav>
-
                         <a class="button button--transparent button--plus content__side-button"
-                        href="pages/form-project.html" target="project_add">Добавить проект</a>
-                    </section>
-                <?php endif; ?>
+                        href="add_project.php" target="project_add">Добавить проект</a>
+
+                    <?php else: ?>
+                        <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+                        <a class="button button--transparent content__side-button" href="auth.php">Войти</a>
+                    <?php endif; ?>
+                </section>
+                
+
                 <main class="content__main">
                     <?=$content;?>   
                 </main>
