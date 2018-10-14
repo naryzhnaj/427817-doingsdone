@@ -45,6 +45,7 @@
             exit();
         }    
     }
-    $page_content = include_template('reg.php', ['errors' => $errors, 'title' => 'Регистрация']);
-    print($page_content);
+    $page_content = include_template('reg.php', ['errors' => $errors]);
+    $layout_content = include_template('layout.php', ['content' => $page_content, 'title' => 'Регистрация']);
+    print($layout_content);
 ?>

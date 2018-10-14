@@ -2,6 +2,7 @@
     $link = mysqli_connect('localhost', 'root', '', 'doingsdone');
     mysqli_set_charset($link, 'utf8');
     require_once('functions.php');
+    session_start();
     
     if (!$link) {
         $page_content = include_template('error.php', ['error' => mysqli_connect_error(), 'title' => 'Вход на сайт']);
@@ -24,7 +25,6 @@
         }
 
         if (!$errors) {
-            session_start();
             $_SESSION['user'] = $user;
             header('Location: /index.php');
             exit();

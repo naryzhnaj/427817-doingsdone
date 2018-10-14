@@ -2,6 +2,7 @@
     $link = mysqli_connect('localhost', 'root', '', 'doingsdone');
     mysqli_set_charset($link, 'utf8');
     require_once('functions.php');
+    session_start();
     
     if (!$link) {
         $layout_content = include_template('error.php', ['error' => mysqli_connect_error()]);
@@ -10,7 +11,8 @@
     }
 
     try {
-        $projects = get_projects($_SESSION['user']['id'], $link);
+        $user = $_SESSION['user']['id'];
+        $projects = get_projects($user, $link);
     }
     catch (Exception $ex) {
         echo $ex->getMessage();

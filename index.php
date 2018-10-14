@@ -4,7 +4,8 @@
 	$link = mysqli_connect('localhost', 'root', '', 'doingsdone');
     mysqli_set_charset($link, 'utf8');
     require_once('functions.php');
-
+    session_start();
+    
     if (!isset($_SESSION['user'])) {
         $page_content = include_template('guest.php', []);
         $layout_content = include_template('layout.php', ['content' => $page_content,'title' => 'Дела в порядке']);
