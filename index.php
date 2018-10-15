@@ -1,7 +1,6 @@
 <?php
     $show_complete_tasks = rand(0, 1);
-    
-	$link = mysqli_connect('localhost', 'root', '', 'doingsdone');
+    $link = mysqli_connect('localhost', 'root', '', 'doingsdone');
     mysqli_set_charset($link, 'utf8');
     require_once('functions.php');
     session_start();
@@ -21,8 +20,15 @@
             $user_id = $_SESSION['user']['id'];
             $projects = get_projects($user_id, $link);
             
-            $id = ( isset($_GET['id']) ) ? intval($_GET['id']) : 0;
-            $tasks = get_tasks($user_id, $link, $id);
+            $project_id = ( isset($_GET['id']) ) ? intval($_GET['id']) : 0;
+            $day = ( isset($_GET['type']) ) ? htmlspecialchars($_GET['type']) : '';
+            $tasks = get_tasks($user_id, $link, $project_id, $day);
+            
+            $id = ( isset($_GET['task_id']) ) ? htmlspecialchars($_GET['task_id']) : '';
+            if ($id) {
+                change_status($link, $id, htmlspecialchars($_GET['check']));
+                header('Location: /');    
+            }
         }
         catch (Exception $ex) {
             echo $ex->getMessage();

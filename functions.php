@@ -21,8 +21,14 @@
         return $projects;
     }
 
+    function change_status($conn, $task_id, $status) {
+        $sql = "UPDATE tasks SET task_status = '$status' WHERE id = '$task_id'";
+        $res = mysqli_query($conn, $sql);
+        return $res;
+    }
+
     function get_tasks($user_id, $conn, $project, $period) {
-        $sql = "SELECT tasks.title, project_id AS category, DATE_FORMAT(term, '%d.%m.%Y') AS date, task_status AS done, projects.title AS project_name
+        $sql = "SELECT tasks.id, tasks.title, project_id AS category, DATE_FORMAT(term, '%d.%m.%Y') AS date, task_status AS done, projects.title AS project_name
                 FROM tasks INNER JOIN projects ON projects.id = tasks.project_id
                 WHERE tasks.author_id = " . $user_id;
         
