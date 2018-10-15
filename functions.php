@@ -21,15 +21,19 @@
         return $projects;
     }
 
-    function get_tasks($user_id, $conn, $project) {
-        $sql = 'SELECT tasks.title, project_id AS category, term AS date, task_status AS done, projects.title AS project_name
+    function get_tasks($user_id, $conn, $project, $period) {
+        $sql = "SELECT tasks.title, project_id AS category, DATE_FORMAT(term, '%d.%m.%Y') AS date, task_status AS done, projects.title AS project_name
                 FROM tasks INNER JOIN projects ON projects.id = tasks.project_id
-                WHERE tasks.author_id = ' . $user_id;
+                WHERE tasks.author_id = " . $user_id;
         
         if ($project) {
-          $sql .= ' AND tasks.project_id = ' . $project;
+          $sql .= " AND tasks.project_id = " . $project;
         }
 
+        $periods = ['today' => '= CURDATE()', 'next' => '= DATE_SUB(CURDATE(), INTERVAL -1 DAY)', 'late' => '< CURDATE()'];
+        if ($period) {
+            $sql .= " AND tasks.term " . $periods[$period];
+        }
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -55,7 +59,21 @@
         $res = mysqli_stmt_execute($stmt);   
         return $res;
     }
-   
+
+    function insert_project($conn, $name, $user_id) {
+        $sql = 'INSERT INTO projects (title, author_id) VALUES (?, ?)';
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, 'si', $name, $user_id);
+        $res = mysqli_stmt_execute($stmt);
+        return $res;
+    }
+
+    function check_project($conn, $name, $user_id) {
+        $sql = "SELECT id FROM projects WHERE title = '$name' AND author_id = '$user_id'";
+        $res = mysqli_query($conn, $sql);
+        return (mysqli_num_rows($res) > 0);
+    }
+
     function check_email($conn, $email) {    
         $email = mysqli_real_escape_string($conn, $email);
         $sql = "SELECT id FROM users WHERE email = '$email'";
