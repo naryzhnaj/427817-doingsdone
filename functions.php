@@ -28,17 +28,16 @@
     }
 
     function get_tasks($user_id, $conn, $project, $period) {
-        $sql = "SELECT tasks.id, tasks.title, project_id AS category, DATE_FORMAT(term, '%d.%m.%Y') AS date, task_status AS done, projects.title AS project_name
-                FROM tasks INNER JOIN projects ON projects.id = tasks.project_id
-                WHERE tasks.author_id = " . $user_id;
+        $sql = "SELECT id, title, project_id AS category, DATE_FORMAT(term, '%d.%m.%Y') AS date, 
+                    task_status AS done, task_file FROM tasks WHERE author_id = " . $user_id;
         
         if ($project) {
-          $sql .= " AND tasks.project_id = " . $project;
+          $sql .= " AND project_id = " . $project;
         }
 
         $periods = ['today' => '= CURDATE()', 'next' => '= DATE_SUB(CURDATE(), INTERVAL -1 DAY)', 'late' => '< CURDATE()'];
         if ($period) {
-            $sql .= " AND tasks.term " . $periods[$period];
+            $sql .= " AND term " . $periods[$period];
         }
         $result = mysqli_query($conn, $sql);
         if ($result) {
@@ -85,6 +84,12 @@
         $sql = "SELECT id FROM users WHERE email = '$email'";
         $res = mysqli_query($conn, $sql);
         return (mysqli_num_rows($res) > 0);
+    }
+
+    function check_author($conn, $id, $user) {
+        $sql = 'SELECT author_id FROM projects WHERE id = ' . $id;
+        $res = mysqli_query($conn, $sql);
+        return (mysqli_fetch_array($res, MYSQLI_ASSOC)['author_id'] == $user);
     }
 
     function include_template($name, $data) {

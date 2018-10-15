@@ -27,17 +27,15 @@
         <?php if ( $show_complete_tasks || !$task['done'] ): ?> 
             <tr class="tasks__item task <?= set_task_class($task); ?>">
                 <td class="task__select">
-                <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden" type="checkbox"
-                    <?php if ( $task['done'] ): ?>checked<?php endif; ?>
-                    value=<?= $task['id']; ?>>
-                    <span class="checkbox__text"><?= htmlspecialchars($task['title']); ?></span>
-                </label>
+                  <label class="checkbox task__checkbox">
+                        <input class="checkbox__input task__checkbox visually-hidden" type="checkbox"
+                        <?php if ( $task['done'] ): ?>checked<?php endif; ?>
+                        value=<?= $task['id']; ?>>
+                        <span class="checkbox__text"><?= htmlspecialchars($task['title']); ?></span>
+                    </label>
                 </td>
-                <td class="task__date"><?= htmlspecialchars($task['date']); ?></td>
-                <td class="task__controls">
-                    <?= htmlspecialchars( $task['project_name'] ); ?>
-                </td>
+                <td class="task__file"><?php if ($task['task_file']) print(htmlspecialchars($task['task_file']));?></td>
+                <td class="task__date"><?php if (strtotime($task['date']) > 0) print(htmlspecialchars($task['date']));?></td>
             </tr>  
         <?php endif; ?>
     <?php endforeach; ?>
