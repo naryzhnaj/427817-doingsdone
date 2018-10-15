@@ -8,7 +8,7 @@
 
 <div class="tasks-controls">
     <nav class="tasks-switch">
-        <a href="/?type=all" class="tasks-switch__item <?=set_item_class('all');?>">Все задачи</a>
+        <a href="/" class="tasks-switch__item <?=set_item_class('');?>">Все задачи</a>
         <a href="/?type=today" class="tasks-switch__item <?=set_item_class('today');?>">Повестка дня</a>
         <a href="/?type=next" class="tasks-switch__item <?=set_item_class('next');?>">Завтра</a>
         <a href="/?type=late" class="tasks-switch__item <?=set_item_class('late');?>">Просроченные</a>
@@ -33,9 +33,13 @@
                         <span class="checkbox__text"><?= htmlspecialchars($task['title']); ?></span>
                     </label>
                 </td>
-                <td class="task__file"><a class='download-link' href="#">
-                    <?php if ($task['task_file']) print(htmlspecialchars($task['task_file']));?>
-                </a></td>
+                <td class="task__file">
+                    <?php if ($task['task_file']): ?>                
+                        <a class='download-link' href="#">
+                            <?=htmlspecialchars($task['task_file']);?>
+                        </a>
+                    <?php endif;?>
+                </td>
                 <td class="task__date"><?php if (strtotime($task['date']) > 0) print(htmlspecialchars($task['date']));?></td>
             </tr>  
         <?php endif; ?>

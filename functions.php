@@ -121,6 +121,6 @@
     }
 
     function set_item_class($item) {
-        return ($_GET['type'] === $item) ? 'tasks-switch__item--active' : '';
+        return ((!$_GET['type'] && !$item) || ($_GET['type'] === $item)) ? 'tasks-switch__item--active' : '';
     }
 ?>
