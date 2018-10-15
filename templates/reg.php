@@ -2,9 +2,9 @@
 <form class="form" action="" method="post">
   <div class="form__row">
     <label class="form__label" for="email">E-mail <sup>*</sup></label>
-    <input class="form__input" type="text" name="email" id="email" value="" placeholder="Введите e-mail" required>
+    <input class="form__input" type="email" name="email" id="email" value="" placeholder="Введите e-mail" required>
       <?php if (isset($errors['email'])) : ?>
-          <p class="form__message">E-mail введён некорректно</p>
+          <p class="form__message"><?=$errors['email']; ?></p>
       <?php endif; ?> 
   </div>
 
@@ -12,7 +12,7 @@
     <label class="form__label" for="password">Пароль <sup>*</sup></label>
     <input class="form__input" type="password" name="password" id="password" value="" placeholder="Введите пароль" required>
     <?php if (isset($errors['password'])) : ?>
-          <p class="form__message">Введите пароль</p>
+          <p class="form__message"><?=$errors['password']; ?></p>
       <?php endif; ?>
   </div>
 
@@ -20,7 +20,7 @@
     <label class="form__label" for="name">Имя <sup>*</sup></label>
     <input class="form__input" type="text" name="name" id="name" value="" placeholder="Введите имя" required>
     <?php if (isset($errors['name'])) : ?>
-          <p class="form__message">Введите имя</p>
+          <p class="form__message"><?=$errors['name']; ?></p>
     <?php endif; ?>
   </div>
 

@@ -49,7 +49,7 @@
                             </ul>
                         </nav>
                         <a class="button button--transparent button--plus content__side-button"
-                        href="add_project.php" target="project_add">Добавить проект</a>
+                        href="add_project.php">Добавить проект</a>
 
                     <?php else: ?>
                         <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
