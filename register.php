@@ -1,7 +1,6 @@
 <?php                
-    $link = mysqli_connect('localhost', 'root', '', 'doingsdone');
-    mysqli_set_charset($link, 'utf8');
     require_once('functions.php');
+    require_once('init.php');
     
     if (!$link) {
         $page_content = include_template('error.php', ['error' => mysqli_connect_error(), 'title' => 'Регистрация']);
