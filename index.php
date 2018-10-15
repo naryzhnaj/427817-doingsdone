@@ -18,7 +18,6 @@
         try {
             $user_id = $_SESSION['user']['id'];
             $projects = get_projects($user_id, $link);
-            
             $project_id = ( isset($_GET['id']) ) ? intval($_GET['id']) : 0;
             if ($project_id && !check_author($link, $project_id, $user_id)) { 
                 header("HTTP/1.1 404 Not Found");
@@ -31,6 +30,7 @@
             $id = ( isset($_GET['task_id']) ) ? htmlspecialchars($_GET['task_id']) : '';
             if ($id) {
                 change_status($link, $id, htmlspecialchars($_GET['check']));
+                header('Location: /');
             }
         }
         catch (Exception $ex) {

@@ -36,7 +36,7 @@
         }
 
         $periods = ['today' => '= CURDATE()', 'next' => '= DATE_SUB(CURDATE(), INTERVAL -1 DAY)', 'late' => '< CURDATE()'];
-        if ($period) {
+        if (($period) && ($period !== 'all')) {
             $sql .= " AND term " . $periods[$period];
         }
         $result = mysqli_query($conn, $sql);
@@ -114,9 +114,13 @@
         if ( $current_task['done'] ) {
             $task_status = 'task--completed';
         }
-        elseif ( $current_task['date'] && floor( (strtotime($current_task['date'] ) - time() ) / 3600) <= 24 ) {
+        elseif ( (strtotime($current_task['date']) > 0) && floor( (strtotime($current_task['date'] ) - time() ) / 3600) <= 24 ) {
             $task_status = 'task--important';
         }
         return $task_status;
+    }
+
+    function set_item_class($item) {
+        return ($_GET['type'] === $item) ? 'tasks-switch__item--active' : '';
     }
 ?>
