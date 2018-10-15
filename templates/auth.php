@@ -4,7 +4,8 @@
         <label class="form__label" for="email">E-mail <sup>*</sup></label>
         
         <?php $error_class = isset($errors['email']) ? "form__input--error" : ""; ?>
-        <input class="form__input  <?=$error_class;?>" type="text" name="email" id="email" value="" placeholder="Введите e-mail" required>
+        <input class="form__input  <?=$error_class;?>" type="email" name="email" id="email" placeholder="Введите e-mail" required
+            value=<?=(isset($_POST['email'])) ? htmlspecialchars($_POST['email']) : ''; ?>>
         <?php if (isset($errors['email'])):?>
             <p class="form__message"><span class ="form__message error-message"><?=$errors['email']; ?></span></p>
         <?php endif;?>

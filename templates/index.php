@@ -30,10 +30,12 @@
                         <input class="checkbox__input task__checkbox visually-hidden" type="checkbox"
                         <?php if ( $task['done'] ): ?>checked<?php endif; ?>
                         value=<?= $task['id']; ?>>
-                        <a href="/"><span class="checkbox__text"><?= htmlspecialchars($task['title']); ?></span></a>
+                        <span class="checkbox__text"><?= htmlspecialchars($task['title']); ?></span>
                     </label>
                 </td>
-                <td class="task__file"><?php if ($task['task_file']) print(htmlspecialchars($task['task_file']));?></td>
+                <td class="task__file"><a class='download-link' href="#">
+                    <?php if ($task['task_file']) print(htmlspecialchars($task['task_file']));?>
+                </a></td>
                 <td class="task__date"><?php if (strtotime($task['date']) > 0) print(htmlspecialchars($task['date']));?></td>
             </tr>  
         <?php endif; ?>

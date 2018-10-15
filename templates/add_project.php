@@ -2,7 +2,9 @@
 <form class="form"  action="" method="post">
     <div class="form__row">
         <label class="form__label" for="project_name">Название <sup>*</sup></label>
-        <input class="form__input" type="text" name="name" id="project_name" value="" placeholder="Введите название проекта" required>
+        <input class="form__input" type="text" name="name" id="project_name" 
+            placeholder="Введите название проекта" required
+            value=<?=(isset($_POST['name'])) ? htmlspecialchars($_POST['name']) : ''; ?>>
 
         <?php if (isset($errors['name'])):?>
             <p class="form__message"><span class ="form__message error-message"><?=$errors['name']; ?></span></p>
