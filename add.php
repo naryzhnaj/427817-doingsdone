@@ -2,6 +2,7 @@
     $link = mysqli_connect('localhost', 'root', '', 'doingsdone');
     mysqli_set_charset($link, 'utf8');
     require_once('functions.php');
+    session_start();
     
     if (!$link) {
         $layout_content = include_template('error.php', ['error' => mysqli_connect_error()]);
@@ -9,9 +10,8 @@
         exit();
     }
 
-    $user = 2;
     try {
-        $user_name = get_name($user, $link);
+        $user = $_SESSION['user']['id'];
         $projects = get_projects($user, $link);
     }
     catch (Exception $ex) {
@@ -57,6 +57,6 @@
         }
     }
     $page_content = include_template('add_task.php', ['projects' => $projects, 'errors' => $errors]);
-    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'user_name' => $user_name['name'],'title' => 'Добавить задачу']);
+    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'title' => 'Добавить задачу']);
     print($layout_content);
 ?>

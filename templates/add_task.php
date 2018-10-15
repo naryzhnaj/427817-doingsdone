@@ -3,15 +3,17 @@
 <form class="form"  action="" method="post" enctype="multipart/form-data">
     <div class="form__row">
         <label class="form__label" for="name">Название <sup>*</sup></label>
-        <input class="form__input" type="text" name="name" id="name" value="" placeholder="Введите название" required>
-		<?php if (isset($errors['title'])) : ?>
-            <p class="form__message"><span class ="form__message error-message"><?=$errors['title'];?></span></p>
-        <?php endif; ?>
-	</div>
+        
+        <?php $error_class = isset($errors['name']) ? "form__input--error" : ""; ?>
+        <input class="form__input <?=$error_class;?>" type="text" name="name" id="name" value="" placeholder="Введите название"  required>
+        
+        <?php if (isset($errors['name'])):?>
+            <p class="form__message"><span class ="form__message error-message"><?=$errors['name']; ?></span></p>
+        <?php endif;?>
+    </div>
 
     <div class="form__row">
         <label class="form__label" for="project">Проект <sup>*</sup></label>
-
         <select class="form__input form__input--select" name="project" id="project">
             <?php foreach ($projects as $project): ?>
                 <option value="<?=$project['id'] ?>"><?=$project['title']; ?></option>                 
@@ -19,13 +21,16 @@
         </select>
     </div>
 
-    <div class="form__row">    
+    <div class="form__row">   
         <label class="form__label" for="date">Дата выполнения</label>
-        <input class="form__input form__input--date" type="date" name="date" id="date" value="" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
-		<?php if (isset($errors['date'])) : ?>
+        
+        <?php $error_class = isset($errors['date']) ? "form__input--error" : ""; ?>
+        <input class="form__input form__input--date <?=$error_class;?>" type="text" name="date" id="date" value="" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+        
+        <?php if (isset($errors['date'])):?>
             <p class="form__message"><span class ="form__message error-message"><?=$errors['date']; ?></span></p>
-        <?php endif; ?>
-	</div>
+        <?php endif;?>
+    </div>
 
     <div class="form__row">
         <label class="form__label" for="preview">Файл</label>
