@@ -36,7 +36,7 @@
         }
 
         $periods = ['today' => '= CURDATE()', 'next' => '= DATE_SUB(CURDATE(), INTERVAL -1 DAY)', 'late' => '< CURDATE()'];
-        if (($period) && ($period !== 'all')) {
+        if ($period) {
             $sql .= " AND term " . $periods[$period];
         }
         $result = mysqli_query($conn, $sql);
@@ -58,7 +58,7 @@
     }
 
     function insert_user($conn, $user) {
-        $sql = 'INSERT INTO users (email, name, password, registration) VALUES (?, ?, ?, NOW())';
+        $sql = 'INSERT INTO users (email, name, password) VALUES (?, ?, ?)';
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, 'sss', $user['email'], $user['name'], $user['password']);
         $res = mysqli_stmt_execute($stmt);   
@@ -89,7 +89,7 @@
     function check_author($conn, $id, $user) {
         $sql = 'SELECT author_id FROM projects WHERE id = ' . $id;
         $res = mysqli_query($conn, $sql);
-        return (mysqli_fetch_array($res, MYSQLI_ASSOC)['author_id'] == $user);
+        return (mysqli_fetch_array($res, MYSQLI_ASSOC)['author_id'] === $user);
     }
 
     function include_template($name, $data) {
@@ -121,6 +121,6 @@
     }
 
     function set_item_class($item) {
-        return ((!$_GET['type'] && !$item) || ($_GET['type'] === $item)) ? 'tasks-switch__item--active' : '';
+        return ( (!isset($_GET['type']) && $item) || (isset($_GET['type']) && ($_GET['type'] !== $item) ) ) ? '' : 'tasks-switch__item--active';
     }
 ?>
