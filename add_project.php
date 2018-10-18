@@ -2,13 +2,7 @@
     require_once('functions.php');
     require_once('init.php');
     session_start();
-        
-    if (!$link) {
-        $layout_content = include_template('error.php', ['error' => mysqli_connect_error()]);
-        print($layout_content);
-        exit();
-    }
-
+    
     try {
         $user = $_SESSION['user']['id'];
         $projects = get_projects($user, $link);
@@ -18,7 +12,7 @@
     }
 
     $errors = [];
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if (empty($_POST['name'])) {
             $errors['name'] = 'извините, название нужно заполнить';

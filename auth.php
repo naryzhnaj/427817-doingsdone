@@ -3,14 +3,9 @@
     require_once('init.php');
     session_start();
     
-    if (!$link) {
-        $page_content = include_template('error.php', ['error' => mysqli_connect_error(), 'title' => 'Вход на сайт']);
-        print($page_content);
-        exit();
-    }
     $errors = [];
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($_POST['email'])) {
             $errors['email'] = 'извините, это поле нужно заполнить';
         } else {

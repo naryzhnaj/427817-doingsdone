@@ -1,9 +1,11 @@
-CREATE DATABASE doingsdone;
+CREATE DATABASE doingsdone
+DEFAULT CHARACTER SET utf8
+DEFAULT COLLATE utf8_general_ci;
 USE doingsdone;
 
 CREATE TABLE users (
 id INT AUTO_INCREMENT PRIMARY KEY,
-registration DATETIME,
+registration DATETIME DEFAULT NOW(),
 email CHAR(128) NOT NULL,
 name CHAR(128) NOT NULL,
 password CHAR(128) NOT NULL,
