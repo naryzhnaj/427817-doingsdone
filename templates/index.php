@@ -16,14 +16,14 @@
 
     <label class="checkbox">
         <input class="checkbox__input visually-hidden show_completed"
-            <?php if ($_SESSION['show_complete_tasks']): ?>checked<?php endif; ?>
+            <?php if ($show_complete_tasks): ?>checked<?php endif; ?>
              type="checkbox">
         <span class="checkbox__text">Показывать выполненные</span>
     </label>
 </div>
 <table class="tasks">
     <?php foreach ($tasks as $task): ?>
-        <?php if ( $_SESSION['show_complete_tasks'] || !$task['done'] ): ?> 
+        <?php if ( $show_complete_tasks || !$task['done'] ): ?> 
             <tr class="tasks__item task <?= set_task_class($task); ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">

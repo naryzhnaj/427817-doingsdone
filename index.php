@@ -39,7 +39,7 @@
         echo $ex->getMessage();
     }
     
-    $page_content = include_template('index.php', ['tasks' => $tasks]);
+    $page_content = include_template('index.php', ['show_complete_tasks' => $_SESSION['show_complete_tasks'], 'tasks' => $tasks]);
     $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'title' => 'Дела в порядке']);
     print($layout_content);
 ?>

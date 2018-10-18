@@ -35,7 +35,7 @@
           $sql .= " AND project_id = " . $project;
         }
 
-        $periods = ['today' => '= CURDATE()', 'next' => '= DATE_SUB(CURDATE(), INTERVAL -1 DAY)', 'late' => '< CURDATE()'];
+        $periods = ['today' => '= CURDATE()', 'next' => '= DATE_SUB(CURDATE(), INTERVAL -1 DAY)', 'late' => "> '1970-01-01' AND term < CURDATE()"];
         if ($period) {
             $sql .= " AND term " . $periods[$period];
         }
