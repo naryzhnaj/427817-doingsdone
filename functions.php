@@ -231,6 +231,8 @@
     * @return array|null $res результат выполнения запроса
     */
     function search_task($conn, $name, $user) {
+        $name .= '*';
+        $name = mysqli_real_escape_string($conn, $name);
         $sql = "SELECT id, title, project_id AS category, DATE_FORMAT(term, '%d.%m.%Y') AS date, 
                     task_status AS done, task_file FROM tasks 
                     WHERE author_id = '$user' AND MATCH(title) AGAINST('$name' IN BOOLEAN MODE)";
