@@ -41,7 +41,7 @@
     *
     * @param mysqli $conn подключение к серверу MySQL
     * @param int $task_id id задачи
-    * @param int $status новый статус
+    * @param string $status новый статус
     * @return boolean $res результат выполнения запроса
     */
     function change_status($conn, $task_id, $status) {
@@ -234,6 +234,22 @@
         $sql = "SELECT id, title, project_id AS category, DATE_FORMAT(term, '%d.%m.%Y') AS date, 
                     task_status AS done, task_file FROM tasks 
                     WHERE author_id = '$user' AND MATCH(title) AGAINST('$name' IN BOOLEAN MODE)";
+        $res = mysqli_query($conn, $sql);
+        return $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : null;
+    }
+
+    /**
+    * поиск задач для рассылки. Требуется найти невыполненные задачи, у которых срок выполнения через час
+    *
+    * @param mysqli $conn подключение к серверу MySQL
+    * @return array|null $res результат выполнения запроса
+    */
+    function get_tasks_for_mail($conn) {
+        $sql = "SELECT u.email AS email, u.name AS name, title, DATE_FORMAT(term, '%d.%m.%Y %H:%i:%s') AS time
+                FROM tasks JOIN users u ON tasks.author_id = u.id
+                WHERE task_status = '0' AND 
+                term > NOW() AND term <= ADDDATE(NOW(), INTERVAL 1 HOUR) 
+                ORDER BY author_id";
         $res = mysqli_query($conn, $sql);
         return $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : null;
     }
