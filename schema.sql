@@ -35,3 +35,4 @@ FOREIGN KEY (author_id) REFERENCES users(id)
 
 CREATE UNIQUE INDEX email ON users(email);
 CREATE INDEX task_date ON tasks(title, term);
+CREATE FULLTEXT INDEX task_search ON tasks(title);

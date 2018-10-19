@@ -9,7 +9,7 @@
         print($layout_content);
         exit();
     }
-    
+    $errors = [];
     try {
         $user_id = $_SESSION['user']['id'];
         $projects = get_projects($user_id, $link);
@@ -34,12 +34,20 @@
         } elseif (!isset($_SESSION['show_complete_tasks'])) {
             $_SESSION['show_complete_tasks'] = 0;
         }
+
+        $search = (isset($_GET['task_search'])) ? trim(htmlspecialchars($_GET['task_search'])) : '';
+        if ($search) {
+            $tasks = search_task($link, $search, $user_id);
+            if (!$tasks) {
+               $errors['empty_tasks'] = true;
+            }
+        }
     }
     catch (Exception $ex) {
         echo $ex->getMessage();
     }
-    
-    $page_content = include_template('index.php', ['show_complete_tasks' => $_SESSION['show_complete_tasks'], 'tasks' => $tasks]);
-    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'title' => 'Дела в порядке']);
+
+    $page_content = include_template('index.php', ['show_complete_tasks' => $_SESSION['show_complete_tasks'], 'tasks' => $tasks, 'errors' => $errors]);
+    $layout_content = include_template('layout.php', ['content' => $page_content, 'projects' => $projects, 'title' => 'Дела в порядке']);   
     print($layout_content);
 ?>
