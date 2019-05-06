@@ -7,10 +7,10 @@
     * @return array|null $res результат выполнения запроса
     */
     function get_user($email, $conn) {
-        $email = mysqli_real_escape_string($conn, $email);
+        $email = $conn->real_escape_string($email);
         $sql = "SELECT * FROM users WHERE email = '$email'";
-        $res = mysqli_query($conn, $sql);
-        return $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
+        $res = $conn->query($sql);
+        return $res ? $res->fetch_array(MYSQLI_ASSOC) : null;
     }
 
     /**
@@ -26,9 +26,9 @@
               (SELECT COUNT(*) from tasks WHERE task_status = '0' AND projects.id = tasks.project_id) AS task_amount
                 FROM projects WHERE author_id = " . $user_id;
         
-        $result = mysqli_query($conn, $sql);
+        $result = $conn->query($sql);
         if ($result) {
-            $projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            $projects = $result->fetch_all(MYSQLI_ASSOC);
         }
         else {
             throw new Exception("Не удалось получить данные");
@@ -46,7 +46,7 @@
     */
     function change_status($conn, $task_id, $status) {
         $sql = "UPDATE tasks SET task_status = '$status' WHERE id = '$task_id'";
-        $res = mysqli_query($conn, $sql);
+        $res = $conn->query($sql);
         return $res;
     }
 
@@ -68,13 +68,14 @@
           $sql .= " AND project_id = " . $project;
         }
 
-        $periods = ['today' => '= CURDATE()', 'next' => '= DATE_SUB(CURDATE(), INTERVAL -1 DAY)', 'late' => "> '1970-01-01' AND term < CURDATE()"];
+        $periods = ['today' => '= CURDATE()', 'next' => '= DATE_SUB(CURDATE(), INTERVAL -1 DAY)', 'late' => " > '1970-01-01' AND term < CURDATE()"];
         if ($period) {
             $sql .= " AND term " . $periods[$period];
         }
-        $result = mysqli_query($conn, $sql);
+
+        $result = $conn->query($sql);
         if ($result) {
-            $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            $tasks = $result->fetch_all(MYSQLI_ASSOC);
         }
         else {
             throw new Exception("Не удалось получить данные");
@@ -92,10 +93,9 @@
     */
     function insert_task($conn, $task, $user_id) {
         $sql = 'INSERT INTO tasks (title, term, task_file, project_id, author_id) VALUES (?, ?, ?, ?, ?)';
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, 'sssii', $task['title'], $task['date'], $task['file'], $task['project_id'], $user_id);
-        $res = mysqli_stmt_execute($stmt);
-        return $res;
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('sssii', $task['title'], $task['date'], $task['file'], $task['project_id'], $user_id);
+        return $stmt->execute();
     }
 
     /**
@@ -107,10 +107,9 @@
     */
     function insert_user($conn, $user) {
         $sql = 'INSERT INTO users (email, name, password) VALUES (?, ?, ?)';
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, 'sss', $user['email'], $user['name'], $user['password']);
-        $res = mysqli_stmt_execute($stmt);   
-        return $res;
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('sss', $user['email'], $user['name'], $user['password']);
+        return $stmt->execute();
     }
 
     /**
@@ -123,10 +122,9 @@
     */
     function insert_project($conn, $name, $user_id) {
         $sql = 'INSERT INTO projects (title, author_id) VALUES (?, ?)';
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, 'si', $name, $user_id);
-        $res = mysqli_stmt_execute($stmt);
-        return $res;
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('si', $name, $user_id);
+        return $stmt->execute();
     }
 
     /**
@@ -139,8 +137,8 @@
     */
     function check_project($conn, $name, $user_id) {
         $sql = "SELECT id FROM projects WHERE title = '$name' AND author_id = '$user_id'";
-        $res = mysqli_query($conn, $sql);
-        return (mysqli_num_rows($res) > 0);
+        $res = $conn->query($sql);
+        return ($res->num_rows > 0);
     }
 
     /**
@@ -151,10 +149,10 @@
     * @return boolean есть ли уже в базе такой адрес
     */
     function check_email($conn, $email) {    
-        $email = mysqli_real_escape_string($conn, $email);
+        $email = $conn->real_escape_string($email);
         $sql = "SELECT id FROM users WHERE email = '$email'";
-        $res = mysqli_query($conn, $sql);
-        return (mysqli_num_rows($res) > 0);
+        $res = $conn->query($sql);
+        return ($res->num_rows > 0);
     }
 
     /**
@@ -167,8 +165,8 @@
     */
     function check_author($conn, $id, $user) {
         $sql = 'SELECT author_id FROM projects WHERE id = ' . $id;
-        $res = mysqli_query($conn, $sql);
-        return (mysqli_fetch_array($res, MYSQLI_ASSOC)['author_id'] === $user);
+        $res = $conn->query($sql);
+        return ($res->fetch_array(MYSQLI_ASSOC)['author_id'] === $user);
     }
 
     /**
@@ -206,7 +204,7 @@
         if ( $current_task['done'] ) {
             $task_status = 'task--completed';
         }
-        elseif ( (strtotime($current_task['date']) > 0) && floor( (strtotime($current_task['date'] ) - time() ) / 3600) <= 24 ) {
+        elseif ((strtotime($current_task['date']) > 0) && floor( (strtotime($current_task['date'] ) - time() ) / 3600) <= 24 ) {
             $task_status = 'task--important';
         }
         return $task_status;
@@ -231,17 +229,16 @@
     * @return array|null $res результат выполнения запроса
     */
     function search_task($conn, $name, $user) {
-        $name .= '*';
-        $name = mysqli_real_escape_string($conn, $name);
+        $name = $conn->real_escape_string($name);
         $sql = "SELECT id, title, project_id AS category, DATE_FORMAT(term, '%d.%m.%Y') AS date, 
                     task_status AS done, task_file FROM tasks 
-                    WHERE author_id = '$user' AND MATCH(title) AGAINST('$name' IN BOOLEAN MODE)";
-        $res = mysqli_query($conn, $sql);
-        return $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : null;
+                    WHERE author_id = '$user' AND MATCH(title) AGAINST('$name*' IN BOOLEAN MODE)";
+        $res = $conn->query($sql);
+        return $res ? $res->fetch_all(MYSQLI_ASSOC) : null;
     }
 
     /**
-    * поиск задач для рассылки. Требуется найти невыполненные задачи, у которых срок выполнения через час
+    * поиск задач для рассылки. Требуется найти невыполненные задачи, которые нужно выполнить через час
     *
     * @param mysqli $conn подключение к серверу MySQL
     * @return array|null $res результат выполнения запроса
@@ -252,7 +249,7 @@
                 WHERE task_status = '0' AND 
                 term > NOW() AND term <= ADDDATE(NOW(), INTERVAL 1 HOUR) 
                 ORDER BY author_id";
-        $res = mysqli_query($conn, $sql);
-        return $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : null;
+        $res = $conn->query($sql);
+        return $res ? $res->fetch_all(MYSQLI_ASSOC) : null;
     }
 ?>
